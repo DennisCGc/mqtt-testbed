@@ -1,0 +1,122 @@
+version: "3.8"
+networks:
+  mqtt-net:
+    external: true
+    # driver: local
+    # ipam:
+    #   config:
+    #     - subnet: 10.5.0.0/16
+    #       gateway: 10.5.0.99
+
+services:
+  EVB-500-000-001-broker:
+    image: eclipse-mosquitto
+    hostname: EVB-500-000-001-broker
+    container_name: EVB-500-000-001-broker
+    restart: unless-stopped
+    ports:
+      - "18831:1883"
+      - "19001:9001"
+    volumes:
+      - ./EVB-500-000-001/conf:/mosquitto/config
+      - ./EVB-500-000-001/data:/mosquitto/data
+      - ./logs:/mosquitto/log
+    networks:
+      mqtt-net:
+        ipv4_address: 10.5.0.1
+
+  EVB-500-000-002-broker:
+    image: eclipse-mosquitto
+    hostname: EVB-500-000-002-broker
+    container_name: EVB-500-000-002-broker
+    restart: unless-stopped
+    ports:
+      - "18832:1883"
+      - "19002:9001"
+    volumes:
+      - ./EVB-500-000-002/conf:/mosquitto/config
+      - ./EVB-500-000-002/data:/mosquitto/data
+      - ./logs:/mosquitto/log
+    networks:
+      mqtt-net:
+        ipv4_address: 10.5.0.2
+
+  EVB-500-000-003-broker:
+    image: eclipse-mosquitto
+    hostname: EVB-500-000-003-broker
+    container_name: EVB-500-000-003-broker
+    restart: unless-stopped
+    ports:
+      - "18833:1883"
+      - "19003:9001"
+    volumes:
+      - ./EVB-500-000-003/conf:/mosquitto/config
+      - ./EVB-500-000-003/data:/mosquitto/data
+      - ./logs:/mosquitto/log
+    networks:
+      mqtt-net:
+        ipv4_address: 10.5.0.3
+
+  cloud-bridge:
+    image: eclipse-mosquitto
+    hostname: cloud-bridge
+    container_name: cloud-bridge
+    restart: unless-stopped
+    ports:
+      - "1883:1883"
+      - "9001:9001"
+    volumes:
+      - ./cloud-bridge/conf:/mosquitto/config
+      - ./cloud-bridge/data:/mosquitto/data
+      - ./logs:/mosquitto/log
+    networks:
+      mqtt-net:
+        ipv4_address: 10.5.1.1
+
+  EVB-500-000-001-stresser:
+    image: inovex/mqtt-stresser
+    hostname: EVB-500-000-001-stresser
+    container_name: EVB-500-000-001-stresser
+    command: "-broker tcp://10.5.0.1:1883 -num-clients 11 -num-messages 110 -rampup-delay 3s -rampup-size 20 -global-timeout 180s -timeout 20s -log-level 2 -topic-base-path yadablada"
+    depends_on:
+      - EVB-500-000-001-broker
+    logging:
+      driver: local
+    networks:
+      - mqtt-net
+    deploy:
+      restart_policy:
+        condition: any
+        delay: 5s
+
+  EVB-500-000-002-stresser:
+    image: inovex/mqtt-stresser
+    hostname: EVB-500-000-002-stresser
+    container_name: EVB-500-000-002-stresser
+    command: "-broker tcp://10.5.0.2:1883 -num-clients 12 -num-messages 120 -rampup-delay 3s -rampup-size 20 -global-timeout 180s -timeout 20s -log-level 2 -topic-base-path yadablada"
+    depends_on:
+      - EVB-500-000-002-broker
+    logging:
+      driver: local
+    networks:
+      - mqtt-net
+    deploy:
+      restart_policy:
+        condition: any
+        delay: 6s
+
+  EVB-500-000-003-stresser:
+    image: inovex/mqtt-stresser
+    hostname: EVB-500-000-003-stresser
+    container_name: EVB-500-000-003-stresser
+    command: "-broker tcp://10.5.0.3:1883 -num-clients 13 -num-messages 130 -rampup-delay 3s -rampup-size 20 -global-timeout 180s -timeout 20s -log-level 2 -topic-base-path yadablada"
+    depends_on:
+      - EVB-500-000-003-broker
+    logging:
+      driver: local
+    networks:
+      - mqtt-net
+    deploy:
+      restart_policy:
+        condition: any
+        delay: 7s
