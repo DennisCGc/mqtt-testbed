@@ -31,7 +31,8 @@ Docker will create the following services
 Brokers 1 to 3 have specific detailed configuration to startup and configure channel bridges to the <i>cloud-bridge</i>. Each subfolder contains a dedicated configuration for each broker, where logging and bridging can be modified.
 
 ### Stressers
-Stressers are configured inside the docker-compose configuration, they are not persistent and so their configuration exists purely as a command line set of parameters within the container definition in docker.
+Stressers are containers running https://github.com/inovex/mqtt-stresser/ which need to be pre-built and available to the docker engine. The stress configurations are inside the docker-compose configuration, they are not persistent and so their configuration exists purely as a command line set of parameters within the container definition in docker.
+For other options see https://stackoverflow.com/questions/51999953/load-testing-services-for-mqtt
 
 
 ## Visualizing MQTT data
