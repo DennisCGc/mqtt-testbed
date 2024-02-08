@@ -57,27 +57,28 @@ services:
       mqtt-net:
         ipv4_address: 10.5.0.3
 
-  cloud-bridge:
-    image: eclipse-mosquitto
-    hostname: cloud-bridge
-    container_name: cloud-bridge
+  EVB-500-000-004-broker:
+    image: emqx/nanomq:0.21-full
+    hostname: EVB-500-000-004-broker
+    container_name: EVB-500-000-004-broker
     restart: unless-stopped
     ports:
-      - "1883:1883"
-      - "9001:9001"
+      - "18834:1883"
+      - "19004:9001"
     volumes:
-      - ./cloud-bridge/conf:/mosquitto/config
-      - ./cloud-bridge/data:/mosquitto/data
-      - ./logs:/mosquitto/log
+      - ./EVB-500-000-004/nanomq-conf/nanomq.conf:/etc/nanomq.conf
+      - ./logs/EVB-500-000-004-nanomq.log:/tmp/nanomq.log
     networks:
       mqtt-net:
-        ipv4_address: 10.5.1.1
+        ipv4_address: 10.5.0.4
 
   EVB-500-000-001-collectd:
     image: collectd:custom-mqtt
     hostname: EVB-500-000-001-collectd
     container_name: EVB-500-000-001-collectd
     restart: unless-stopped
+    depends_on:
+      - EVB-500-000-001-broker
     volumes:
       - ./EVB-500-000-001/collectd-conf:/etc/collectd
       - ./logs:/var/log
@@ -90,6 +91,8 @@ services:
     hostname: EVB-500-000-002-collectd
     container_name: EVB-500-000-002-collectd
     restart: unless-stopped
+    depends_on:
+      - EVB-500-000-002-broker
     volumes:
       - ./EVB-500-000-002/collectd-conf:/etc/collectd
       - ./logs:/var/log
@@ -102,6 +105,8 @@ services:
     hostname: EVB-500-000-003-collectd
     container_name: EVB-500-000-003-collectd
     restart: unless-stopped
+    depends_on:
+      - EVB-500-000-003-broker
     volumes:
       - ./EVB-500-000-003/collectd-conf:/etc/collectd
       - ./logs:/var/log
@@ -109,6 +114,19 @@ services:
       mqtt-net:
         ipv4_address: 10.5.2.3
 
+  EVB-500-000-004-collectd:
+    image: collectd:custom-mqtt
+    hostname: EVB-500-000-004-collectd
+    container_name: EVB-500-000-004-collectd
+    restart: unless-stopped
+    depends_on:
+      - EVB-500-000-004-broker
+    volumes:
+      - ./EVB-500-000-004/collectd-conf:/etc/collectd
+      - ./logs:/var/log
+    networks:
+      mqtt-net:
+        ipv4_address: 10.5.2.4
 
   EVB-500-000-001-stresser:
     image: inovex/mqtt-stresser
@@ -118,7 +136,7 @@ services:
     depends_on:
       - EVB-500-000-001-broker
     logging:
-      driver: local
+      driver: none
     networks:
       - mqtt-net
     deploy:
@@ -134,7 +152,7 @@ services:
     depends_on:
       - EVB-500-000-002-broker
     logging:
-      driver: local
+      driver: none
     networks:
       - mqtt-net
     deploy:
@@ -150,10 +168,42 @@ services:
     depends_on:
       - EVB-500-000-003-broker
     logging:
-      driver: local
+      driver: none
     networks:
       - mqtt-net
     deploy:
       restart_policy:
         condition: any
         delay: 7s
+
+  EVB-500-000-004-stresser:
+    image: inovex/mqtt-stresser
+    hostname: EVB-500-000-004-stresser
+    container_name: EVB-500-000-004-stresser
+    command: "-broker tcp://10.5.0.4:1883 -num-clients 15 -num-messages 130 -rampup-delay 3s -rampup-size 20 -global-timeout 180s -timeout 20s -log-level 2 -topic-base-path yadablada"
+    depends_on:
+      - EVB-500-000-004-broker
+    logging:
+      driver: none
+    networks:
+      - mqtt-net
+    deploy:
+      restart_policy:
+        condition: any
+        delay: 4s
+
+  cloud-bridge:
+    image: eclipse-mosquitto
+    hostname: cloud-bridge
+    container_name: cloud-bridge
+    restart: unless-stopped
+    ports:
+      - "1883:1883"
+      - "9001:9001"
+    volumes:
+      - ./cloud-bridge/conf:/mosquitto/config
+      - ./cloud-bridge/data:/mosquitto/data
+      - ./logs:/mosquitto/log
+    networks:
+      mqtt-net:
+        ipv4_address: 10.5.1.1
