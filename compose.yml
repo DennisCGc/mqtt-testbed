@@ -18,7 +18,7 @@ services:
       - "18831:1883"
       - "19001:9001"
     volumes:
-      - ./EVB-500-000-001/conf:/mosquitto/config
+      - ./EVB-500-000-001/mosquitto-conf:/mosquitto/config
       - ./EVB-500-000-001/data:/mosquitto/data
       - ./logs:/mosquitto/log
     networks:
@@ -34,7 +34,7 @@ services:
       - "18832:1883"
       - "19002:9001"
     volumes:
-      - ./EVB-500-000-002/conf:/mosquitto/config
+      - ./EVB-500-000-002/mosquitto-conf:/mosquitto/config
       - ./EVB-500-000-002/data:/mosquitto/data
       - ./logs:/mosquitto/log
     networks:
@@ -50,7 +50,7 @@ services:
       - "18833:1883"
       - "19003:9001"
     volumes:
-      - ./EVB-500-000-003/conf:/mosquitto/config
+      - ./EVB-500-000-003/mosquitto-conf:/mosquitto/config
       - ./EVB-500-000-003/data:/mosquitto/data
       - ./logs:/mosquitto/log
     networks:
@@ -72,6 +72,43 @@ services:
     networks:
       mqtt-net:
         ipv4_address: 10.5.1.1
+
+  EVB-500-000-001-collectd:
+    image: collectd:custom-mqtt
+    hostname: EVB-500-000-001-collectd
+    container_name: EVB-500-000-001-collectd
+    restart: unless-stopped
+    volumes:
+      - ./EVB-500-000-001/collectd-conf:/etc/collectd
+      - ./logs:/var/log
+    networks:
+      mqtt-net:
+        ipv4_address: 10.5.2.1
+
+  EVB-500-000-002-collectd:
+    image: collectd:custom-mqtt
+    hostname: EVB-500-000-002-collectd
+    container_name: EVB-500-000-002-collectd
+    restart: unless-stopped
+    volumes:
+      - ./EVB-500-000-002/collectd-conf:/etc/collectd
+      - ./logs:/var/log
+    networks:
+      mqtt-net:
+        ipv4_address: 10.5.2.2
+
+  EVB-500-000-003-collectd:
+    image: collectd:custom-mqtt
+    hostname: EVB-500-000-003-collectd
+    container_name: EVB-500-000-003-collectd
+    restart: unless-stopped
+    volumes:
+      - ./EVB-500-000-003/collectd-conf:/etc/collectd
+      - ./logs:/var/log
+    networks:
+      mqtt-net:
+        ipv4_address: 10.5.2.3
+
 
   EVB-500-000-001-stresser:
     image: inovex/mqtt-stresser

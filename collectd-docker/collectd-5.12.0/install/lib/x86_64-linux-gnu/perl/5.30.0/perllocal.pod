@@ -1,0 +1,44 @@
+=head2 Wed Feb  7 17:06:15 2024: C<Module> L<Collectd|Collectd>
+
+=over 4
+
+=item *
+
+C<installed into: /home/claudio/firmware/quercus/com/mqtt_poc/docker_compose_test_bed/collectd-docker/collectd-5.12.0/install/share/perl/5.30.0>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: >
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Wed Feb  7 17:09:22 2024: C<Module> L<Collectd|Collectd>
+
+=over 4
+
+=item *
+
+C<installed into: /home/claudio/firmware/quercus/com/mqtt_poc/docker_compose_test_bed/collectd-docker/collectd-5.12.0/install/share/perl/5.30.0>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: >
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
