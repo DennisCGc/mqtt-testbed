@@ -20,7 +20,7 @@ services:
     volumes:
       - ./EVB-500-000-001/mosquitto-conf:/mosquitto/config
       - ./EVB-500-000-001/data:/mosquitto/data
-      - ./logs:/mosquitto/log
+      - ./logs/EVB-500-000-001-broker.log:/mosquitto/log/broker.log
     networks:
       mqtt-net:
         ipv4_address: 10.5.0.1
@@ -36,7 +36,7 @@ services:
     volumes:
       - ./EVB-500-000-002/mosquitto-conf:/mosquitto/config
       - ./EVB-500-000-002/data:/mosquitto/data
-      - ./logs:/mosquitto/log
+      - ./logs/EVB-500-000-002-broker.log:/mosquitto/log/broker.log
     networks:
       mqtt-net:
         ipv4_address: 10.5.0.2
@@ -52,7 +52,7 @@ services:
     volumes:
       - ./EVB-500-000-003/mosquitto-conf:/mosquitto/config
       - ./EVB-500-000-003/data:/mosquitto/data
-      - ./logs:/mosquitto/log
+      - ./logs/EVB-500-000-003-broker.log:/mosquitto/log/broker.log
     networks:
       mqtt-net:
         ipv4_address: 10.5.0.3
@@ -67,7 +67,7 @@ services:
       - "19004:9001"
     volumes:
       - ./EVB-500-000-004/nanomq-conf/nanomq.conf:/etc/nanomq.conf
-      - ./logs/EVB-500-000-004-nanomq.log:/tmp/nanomq.log
+      - ./logs/EVB-500-000-004-broker.log:/log/nanomq.log
     networks:
       mqtt-net:
         ipv4_address: 10.5.0.4
@@ -203,7 +203,7 @@ services:
     volumes:
       - ./cloud-bridge/conf:/mosquitto/config
       - ./cloud-bridge/data:/mosquitto/data
-      - ./logs:/mosquitto/log
+      - ./logs/cloud-bridge-broker.log:/mosquitto/log/broker.log
     networks:
       mqtt-net:
         ipv4_address: 10.5.1.1
