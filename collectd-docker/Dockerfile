@@ -1,10 +1,9 @@
 FROM        debian:bookworm
 
 RUN         apt-get update
-RUN         DEBIAN_FRONTEND=noninteractive apt-get install -y apt-utils file
-RUN         DEBIAN_FRONTEND=noninteractive apt-get install -y build-essential pkg-config
-RUN         DEBIAN_FRONTEND=noninteractive apt-get install -y mosquitto-dev libmosquitto-dev 
-RUN         DEBIAN_FRONTEND=noninteractive apt-get install -y default-jre
+RUN         DEBIAN_FRONTEND=noninteractive apt-get install -y \
+  apt-utils file automake build-essential pkg-config mosquitto-dev libmosquitto-dev \
+  default-jre bison
 
 ADD         ./collectd-5.12.0 /mnt/collectd-source
 
