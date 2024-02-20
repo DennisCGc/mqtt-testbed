@@ -6,11 +6,15 @@ This repo contains a docker compose and then specific container configurations.
 The docker compose configuration has the following pre-requisites:
 * a docker network has to be created before hand with the following command
 ```
-$ docker network create --gateway 10.5.0.254 --subnet 10.5.0.0/16 mqtt-net 
+$ docker network create --gateway 10.5.0.254 --subnet 10.5.0.0/16 mqtt-net
 ```
 * an mqtt-stresser docker container needs to be created from the mqtt-stresser submodule with the following command
 ```
 $ make container
+```
+* empty logs have to be created, due to the way Docker volume mounts work
+```
+$ ./setup-logs.sh
 ```
 
 ### Services
